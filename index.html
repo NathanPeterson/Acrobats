@@ -8,7 +8,7 @@
       angular
         .module('acrobatApp', [])
         .controller('AcrobatController', function($scope){
-
+          $scope.editing =false;
           $scope.acrobats = [
             {name:'Nathan', act: 'Fire Breathing'},
             {name:'Katelyn', act: 'Magic'},
@@ -21,23 +21,41 @@
           $scope.removeLastAcrobat = function(){
             $scope.acrobats.pop();
           }
+          $scope.editAcrobat = function(acrobat){
+            $scope.editing =true;
+            $scope.acrobat = acrobat;
+          }
+          $scope.updateAcrobat = function(){
+            $scope.acrobat = {};
+            $scope.editing =false;
+          }
+          $scope.removeAcrobat = function(index){
+            $scope.acrobats.splice(index,1);
+          }
         })
     </script>
   </head>
   <body ng-controller="AcrobatController">
     <h1>Acrobat Talent List</h1>
-    <form ng-submit="addAcrobat()">
+    <form ng-submit="addAcrobat()" ng-hide="editing">
       <input type="text" ng-model="acrobat.name" placeholder="Enter Your Name">
       <input type="text" ng-model="acrobat.act" placeholder="Enter Your Act">
       <button type="submit">Sign Me Up!</button>
-      <a href="#" ng-click="removeLastAcrobat()">Remove last Acrobat</a>
+    </form>
+
+    <form ng-submit="updateAcrobat()" ng-show="editing">
+      <input type="text" ng-model="acrobat.name" placeholder="Enter Your Name">
+      <input type="text" ng-model="acrobat.act" placeholder="Enter Your Act">
+      <button type="submit">Save</button>
     </form>
 
     <div>
       <h2>Member List</h2>
       <ul>
-        <li ng-repeat="acrobat in acrobats">
+        <li ng-repeat="acrobat in acrobats track by $index">
           The Fabulous {{ acrobat.name }}: Master of {{ acrobat.act }}
+          <a href="#" ng-click="editAcrobat(acrobat)">(edit)</a>
+          <a href="#" ng-click="removeAcrobat($index)">(remove)</a>
         </li>
       </ul>
     </div>
